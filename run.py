@@ -1,46 +1,79 @@
 import pandas as pd
 import numpy as np
 
-def simulate(max_iter):
-    glasses = np.array([ False ] * 6)
-    drinks = 0
-    for count in range(1, max_iter + 1):
-        chosen_glass = np.random.randint(0, 6)
-        # If full then drink
-        if glasses[chosen_glass]:
-            # Emptying the glass
-            glasses[chosen_glass] = False
-            drinks += 1
+class Simulate(object):
+    def __init__(self, die_size, num_glasses, select_glass = None):
+        self.die_size = die_size
+        self.num_glasses = num_glasses
+        if select_glass is not None:
+            self.select_glass = select_glass
         else:
-            # Else the glass was empty, so fill it
-            glasses[chosen_glass] = True
+            self.select_glass = lambda die_roll: die_roll
 
-        # If all the glasses are full i.e. True
-        if np.alltrue(glasses):
-            # Return the count of dice rolls/iterations.
-            return count, drinks
+    def simulate(self, max_iter):
+        glasses = np.array([ False ] * self.num_glasses)
+        drinks = 0
+        for count in range(1, max_iter + 1):
+            die_roll = np.random.randint(0, self.die_size)
+            chosen_glass = self.select_glass(die_roll)
+            if chosen_glass is not None:
+                # If full then drink
+                if glasses[chosen_glass]:
+                    # Emptying the glass
+                    glasses[chosen_glass] = False
+                    drinks += 1
+                else:
+                    # Else the glass was empty, so fill it
+                    glasses[chosen_glass] = True
 
-    # We didn't manage to fill all the glasses at once in less
-    # than max_iter iterations, so pass back a missing value.
-    return np.nan, drinks
+            # If all the glasses are full i.e. True
+            if np.alltrue(glasses):
+                # Return the count of dice rolls/iterations.
+                return count, drinks
 
-def get_dist(num_samples, max_iter):
-    """
-        num_samples: number of samples to produce.
-        max_iter: total number of iterations to attempt before giving up on a particular sample.
-    """
-    rolls = []
-    drinks = []
-    for i in range(num_samples):
-        roll_count, drink_count = simulate(max_iter)
-        rolls.append(roll_count)
-        drinks.append(drink_count)
+        # We didn't manage to fill all the glasses at once in less
+        # than max_iter iterations, so pass back a missing value.
+        return np.nan, drinks
 
-    return rolls, drinks
+    def get_dist(self, num_samples, max_iter):
+        """
+            num_samples: number of samples to produce.
+            max_iter: total number of iterations to attempt before giving up on a particular sample.
+        """
+        rolls = []
+        drinks = []
+        for i in range(num_samples):
+            roll_count, drink_count = self.simulate(max_iter)
+            rolls.append(roll_count)
+            drinks.append(drink_count)
 
+        return rolls, drinks
+
+def d20_match_prime(die_roll):
+    for i, prime in enumerate([1,3,5,7,11,13,17,19]):
+        if i + 1 == die_roll:
+            return i
+
+    return None
+
+def d10_match_prime(die_roll):
+    for i, prime in enumerate([1,3,5,7]):
+        if i + 1 == die_roll:
+            return i
+
+    return None
+
+def d6_match_prime(die_roll):
+    for i, prime in enumerate([1,3,5]):
+        if i + 1 == die_roll:
+            return i
+
+    return None
+
+sim = Simulate(6,3, d6_match_prime)
 sampled = pd.DataFrame(
     np.array(
-        get_dist(100000,2000)
+        sim.get_dist(1000,10000)
     ).T,
     columns = ['rolls', 'drinks']
 )
