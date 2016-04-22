@@ -56,6 +56,13 @@ def d20_match_prime(die_roll):
 
     return None
 
+def d20_match_composite(die_roll):
+    for i, prime in enumerate([2,4,6,8,9,10,12,14,15,16,18,20]):
+        if i + 1 == die_roll:
+            return i
+
+    return None
+
 def d10_match_prime(die_roll):
     for i, prime in enumerate([1,3,5,7]):
         if i + 1 == die_roll:
@@ -70,12 +77,52 @@ def d6_match_prime(die_roll):
 
     return None
 
+num_simulations = 100
+max_iters = 100000
+
 sim = Simulate(6,3, d6_match_prime)
 sampled = pd.DataFrame(
     np.array(
-        sim.get_dist(1000,10000)
+        sim.get_dist(num_simulations, max_iters)
+    ).T,
+    columns = ['rolls', 'drinks']
+)
+print()
+print('d6, 3 glasses')
+print(sampled.describe())
+
+sim = Simulate(10,4, d10_match_prime)
+sampled = pd.DataFrame(
+    np.array(
+        sim.get_dist(num_simulations, max_iters)
+    ).T,
+    columns = ['rolls', 'drinks']
+)
+print()
+print('d10, 4 glasses')
+print(sampled.describe())
+
+sim = Simulate(20,8, d20_match_prime)
+sampled = pd.DataFrame(
+    np.array(
+        sim.get_dist(num_simulations, max_iters)
     ).T,
     columns = ['rolls', 'drinks']
 )
 
+print()
+print('d20, 8 glasses')
 print(sampled.describe())
+
+sim = Simulate(20,12, d20_match_composite)
+sampled = pd.DataFrame(
+    np.array(
+        sim.get_dist(num_simulations, max_iters)
+    ).T,
+    columns = ['rolls', 'drinks']
+)
+
+print()
+print('d20, 12 glasses, matching composites')
+print(sampled.describe())
+
