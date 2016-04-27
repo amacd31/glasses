@@ -80,6 +80,17 @@ def d6_match_prime(die_roll):
 num_simulations = 100
 max_iters = 100000
 
+sim = Simulate(6,6)
+sampled = pd.DataFrame(
+    np.array(
+        sim.get_dist(num_simulations, max_iters)
+    ).T,
+    columns = ['rolls', 'drinks']
+)
+print()
+print('d6, 6 glasses, matching all')
+print(sampled.describe())
+
 sim = Simulate(6,3, d6_match_prime)
 sampled = pd.DataFrame(
     np.array(
@@ -88,7 +99,7 @@ sampled = pd.DataFrame(
     columns = ['rolls', 'drinks']
 )
 print()
-print('d6, 3 glasses')
+print('d6, 3 glasses, matching primes')
 print(sampled.describe())
 
 sim = Simulate(10,4, d10_match_prime)
@@ -99,7 +110,7 @@ sampled = pd.DataFrame(
     columns = ['rolls', 'drinks']
 )
 print()
-print('d10, 4 glasses')
+print('d10, 4 glasses, matching primes')
 print(sampled.describe())
 
 sim = Simulate(20,8, d20_match_prime)
@@ -111,7 +122,7 @@ sampled = pd.DataFrame(
 )
 
 print()
-print('d20, 8 glasses')
+print('d20, 8 glasses, matching primes')
 print(sampled.describe())
 
 sim = Simulate(20,12, d20_match_composite)
