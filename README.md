@@ -12,6 +12,10 @@ The question was posed:
 
 This code performs that simulation and a few variants (different sized die, only match against prime numbers, etc.).
 
+Python 2/3 compatible code, run with:
+
+    python dice.py
+
 Example results:
 
     d6, 6 glasses, matching all

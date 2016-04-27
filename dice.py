@@ -87,7 +87,7 @@ sampled = pd.DataFrame(
     ).T,
     columns = ['rolls', 'drinks']
 )
-print()
+print('')
 print('d6, 6 glasses, matching all')
 print(sampled.describe())
 
@@ -98,7 +98,7 @@ sampled = pd.DataFrame(
     ).T,
     columns = ['rolls', 'drinks']
 )
-print()
+print('')
 print('d6, 3 glasses, matching primes')
 print(sampled.describe())
 
@@ -109,7 +109,7 @@ sampled = pd.DataFrame(
     ).T,
     columns = ['rolls', 'drinks']
 )
-print()
+print('')
 print('d10, 4 glasses, matching primes')
 print(sampled.describe())
 
@@ -121,7 +121,7 @@ sampled = pd.DataFrame(
     columns = ['rolls', 'drinks']
 )
 
-print()
+print('')
 print('d20, 8 glasses, matching primes')
 print(sampled.describe())
 
@@ -133,7 +133,7 @@ sampled = pd.DataFrame(
     columns = ['rolls', 'drinks']
 )
 
-print()
+print('')
 print('d20, 12 glasses, matching composites')
 print(sampled.describe())
 
